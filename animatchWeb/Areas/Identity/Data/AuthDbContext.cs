@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace animatchWeb.Areas.Identity.Data;
 
-public class AuthDbContext : IdentityDbContext<UserInfo>
+public class AuthDbContext : IdentityDbContext<ApplicationUser>
 {
     public AuthDbContext(DbContextOptions<AuthDbContext> options)
         : base(options)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace animatchWeb.Models
 {
-    public class UserInfo : IdentityUser
+    public class UserInfo 
     {
         public int Id { get; set; }
 
