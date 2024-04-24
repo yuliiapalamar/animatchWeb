@@ -12,8 +12,8 @@ using animatchWeb.Areas.Identity.Data;
 namespace animatchWeb.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240423230209_RecreateDatabase")]
-    partial class RecreateDatabase
+    [Migration("20240424080334_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
