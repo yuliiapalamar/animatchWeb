@@ -1,8 +1,53 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<animatchWeb.Models.Anime>
+
+@{
+	ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<main>
+	<div class="container home-search">
+		<form asp-action="Index" asp-controller="Home" method="get" class="d-flex search-form" role="search">
+			<input class="form-control me-3" type="search" placeholder="Search" aria-label="Search" name="searchString">
+			<button class="btn btn-border" type="submit">Search</button>
+		</form>
+	</div>
+
+	<div class="container p-5">
+		<div class="row">
+			@foreach (var item in Model)
+			{
+				<div class="col-lg-3 col-md-6 col-sm-12">
+					<a asp-controller="Anime" asp-action="Details" asp-route-id="@item.Id">
+						<div class="card">
+							<img src="@item.Photo" class="card-img-top" alt="...">
+							<div class="card-body">
+								<p class="card-text">@item.Name</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			}
+
+		</div>
+	</div>
+</main>
+
+<script>
+	$(document).ready(function () {
+		$('#searchButton').click(function () {
+			var searchString = $('#searchString').val();
+			$.ajax({
+				url: '/Anime/Search',
+				type: 'POST',
+				data: { searchString: searchString },
+				success: function (data) {
+					// Оновити список аніме на сторінці з отриманими даними
+					$('.row').empty().html(data);
+				},
+				error: function () {
+					console.log('Error while searching anime.');
+				}
+			});
+		});
+	});
+</script>

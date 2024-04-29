@@ -14,7 +14,7 @@ namespace InsertData
             // Створення таблиць
             //CreateTables();
             // DisplayAllData();
-            InsertIntoAnimeGenres();
+            //InsertIntoAnimeGenres();
             Insert();
 
             Console.ReadLine();
@@ -150,7 +150,7 @@ namespace InsertData
 
 
                 Random random = new Random();
-                int rowCount = 51;
+                int rowCount = 200;
                 for (int i = 1; i < rowCount; i++)
                 {
                     // Генерація випадкових даних за допомогою Faker
@@ -163,19 +163,19 @@ namespace InsertData
                     //var animePhoto = photoPaths[random.Next(photoPaths.Length)];
                     //var genreName = faker.Random.Word();
 
-                    var username = faker.Internet.UserName();
-                    var password = faker.Internet.Password();
-                    var email = faker.Internet.Email();
-                    var name = faker.Name.FirstName();
-                    var text = faker.Lorem.Sentence();
-                    var photo = "https://github.com/yuliiapalamar/animatch/blob/master/animatch/AniWPF/photo/defaultUserPhoto.jpg?raw=true";
-                    var level = 1;
-                    var watchedcount = 1;
+                    //var username = faker.Internet.UserName();
+                    //var password = faker.Internet.Password();
+                    //var email = faker.Internet.Email();
+                    //var name = faker.Name.FirstName();
+                    //var text = faker.Lorem.Sentence();
+                    //var photo = "https://github.com/yuliiapalamar/animatch/blob/master/animatch/AniWPF/photo/defaultUserPhoto.jpg?raw=true";
+                    //var level = 1;
+                    //var watchedcount = 1;
 
                     var review = faker.Lorem.Paragraph();
                     var rate = faker.Random.Number(1, 4);
 
-                    int Id = i;
+                    int Id = 1;
 
                     // Вставка даних у таблиці anime
                     // InsertDataIntoAnime(con, Id, animeName, animeYear, animeImdbRate, animeText, animePhoto);
@@ -184,25 +184,30 @@ namespace InsertData
                     // InsertDataIntoGenres(con, Id, genreName);
 
                     // Вставка даних у таблицю userinfo
-                    InsertDataIntoUserInfo(con, Id, username, password, email, name, text, photo, level, watchedcount);
+                    //InsertDataIntoUserInfo(con, Id, username, password, email, name, text, photo, level, watchedcount);
 
                     // Вставка даних у таблицю review
-                    InsertDataIntoReview(con, Id, Id, Id + 49, review, rate);
+                    InsertDataIntoReview(con, i, Id, i, review, rate);
 
                     // Вставка даних у таблицю animegenres
                     //InsertDataIntoAnimeGenres(con, Id, Id, Id);
 
+                   
+                }
+                for (int i = 1; i <= 10; i++)
+                {
+                    int Id = 1;
                     // Вставка даних у таблицю added
-                    InsertDataIntoAdded(con, Id, Id, Id + 49);
+                    InsertDataIntoAdded(con, i, Id, i);
 
                     // Вставка даних у таблицю liked
-                    InsertDataIntoLiked(con, Id, Id, Id + 49);
+                    InsertDataIntoLiked(con, i, Id, i + 10);
 
                     // Вставка даних у таблицю disliked
-                    InsertDataIntoDisLiked(con, Id, Id, Id + 49);
+                    InsertDataIntoDisLiked(con, i, Id, i + 20);
 
                     // Вставка даних у таблицю watched
-                    InsertDataIntoWatched(con, Id, Id, Id + 49);
+                    InsertDataIntoWatched(con, i, Id, i + 30);
                 }
             }
         }

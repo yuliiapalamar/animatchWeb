@@ -1,3 +1,4 @@
+using animatchWeb.Data;
 using animatchWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -6,16 +7,25 @@ namespace animatchWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly AnimeController _animeController;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _animeController = new AnimeController(context);
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View();
+            var animeList = await _animeController.GetAllAnime(searchString);
+            return View(animeList);
+        }
+
+        public async Task<IActionResult> Random()
+        {
+            Random random = new Random();
+            var animeList = await _animeController.GetAllAnime("");
+            var randomAnime = animeList[random.Next(animeList.Count)];
+            return View(randomAnime);
         }
 
         public IActionResult Privacy()

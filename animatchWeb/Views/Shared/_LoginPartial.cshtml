@@ -3,20 +3,27 @@
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject animatchWeb.Data.ApplicationDbContext DbContext
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
+        var userInfo = DbContext.UserInfo.FirstOrDefault(u => u.Email == User.Identity.Name);
+
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-dark" asp-area="" asp-controller="LikedAnime" asp-action="LikedList" asp-route-id="@userInfo?.Id">Збережені</a>
+        </li>
+
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item">
-                <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="1">Hello Admin!</a>
+                <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo?.Id">Hello Admin!</a>
             </li>
         }
         else
         {
             <li class="nav-item">
-                <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="1">Hello @UserManager.GetUserName(User)!</a>
+                <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo?.Id">Hello @UserManager.GetUserName(User)!</a>
             </li>
         }
 

@@ -1,4 +1,5 @@
 ﻿using animatchWeb.Data;
+using animatchWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,12 @@ namespace animatchWeb.Controllers
             }
 
             return View(userInfo);
+        }
+
+        public async Task<UserInfo> GetUser(int id)
+        {
+            var user = await _context.UserInfo.FirstOrDefaultAsync(u => u.Id == id);
+            return user;
         }
     }
 }
