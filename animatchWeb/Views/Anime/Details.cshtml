@@ -1,0 +1,26 @@
+﻿@model Tuple<animatchWeb.Models.Anime, List<animatchWeb.Models.Review>>
+
+
+@{
+	ViewData["Title"] = "Details";
+}
+
+<div class="container">
+	<div class="anime-card">
+		<img src="@Model.Item1.Photo" alt="amine photo" />
+		<div class="anime-card-text">
+			<h2>@Model.Item1.Name</h2>
+			<p>@Model.Item1.Text</p>
+			<p>@Model.Item1.Year</p>
+			<p>@Model.Item1.Imdbrate</p>
+		</div>
+	</div>
+	@foreach (var review in Model.Item2)
+	{
+		<div class="review">
+			<div class="review-text">@review.Text</div>
+			<div class="review-user">User: @review.UserId</div>
+			<div class="review-rate">Rate: @review.Rate</div>
+		</div>
+	}
+</div>

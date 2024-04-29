@@ -1,0 +1,21 @@
+﻿@model animatchWeb.Models.Anime
+
+@{
+	ViewData["Title"] = "Details";
+}
+
+<div class="container">
+	<div class="anime-card">
+		<img src="@Model.Photo" alt="amine photo" />
+		<div class="anime-card-text">
+			<h2>@Model.Name</h2>
+			<p>@Model.Text</p>
+			<p>@Model.Year</p>
+			<p>@Model.Imdbrate</p>
+		</div>
+
+	</div>
+	<form asp-action="Random" asp-controller="Home" method="post">
+		<button type="submit" class="btn btn-primary">Generate Random Anime</button>
+	</form>
+</div>
