@@ -30,28 +30,62 @@ namespace animatchWeb.Controllers
 
 
         // Метод для отримання інформації про конкретне аніме за його Id
-        public async Task<IActionResult> Details(int id)
+        public async Task<Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>> Details(int id)
         {
             var anime = await _context.Anime.FirstOrDefaultAsync(a => a.Id == id);
             if (anime == null)
             {
-                return NotFound();
+                return null;
             }
 
-            var reviews = await _context.Review.Where(r => r.AnimeId == id).ToListAsync();
+			var reviews = await _context.Review
+				.Where(r => r.AnimeId == id)
+				.ToListAsync();
 
-            var model = new Tuple<Anime, List<Review>>(anime, reviews);
+			// Отримати інформацію про користувача (UserInfo)
+			var userInfos = new List<UserInfo>();
+			foreach (var review in reviews)
+			{
+				var userInfo = await _context.UserInfo.FirstOrDefaultAsync(u => u.Id == review.UserId);
+				userInfos.Add(userInfo);
+			}
 
-            return View(model);
+			var genres = await _context.AnimeGenre
+				.Where(ag => ag.AnimeId == id)
+				.Join(_context.Genre, ag => ag.GenreId, g => g.Id, (ag, g) => g)
+				.ToListAsync();
+
+            var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>(anime, reviews, genres, userInfos);
+
+			return model;
         }
 
 
         // Метод для отримання випадкового аніме зі списку
-        public async Task<IActionResult> GetRandomAnime()
+        public async Task<Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>> GetRandomAnime()
         {
             var randomAnime = await _context.Anime.OrderBy(a => Guid.NewGuid()).FirstOrDefaultAsync();
-            return View(randomAnime);
-        }
+			var reviews = await _context.Review
+				.Where(r => r.AnimeId == randomAnime.Id)
+				.ToListAsync();
+
+			// Отримати інформацію про користувача (UserInfo)
+			var userInfos = new List<UserInfo>();
+			foreach (var review in reviews)
+			{
+				var userInfo = await _context.UserInfo.FirstOrDefaultAsync(u => u.Id == review.UserId);
+				userInfos.Add(userInfo);
+			}
+
+			var genres = await _context.AnimeGenre
+				.Where(ag => ag.AnimeId == randomAnime.Id)
+				.Join(_context.Genre, ag => ag.GenreId, g => g.Id, (ag, g) => g)
+				.ToListAsync();
+
+			var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>(randomAnime, reviews, genres, userInfos);
+
+			return model;
+		}
 
     }
 }

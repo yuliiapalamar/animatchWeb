@@ -6,43 +6,28 @@ using System.Diagnostics;
 
 namespace animatchWeb.Controllers
 {
-    public class LikedAnimeController : Controller
+    public class AddedAnimeController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public LikedAnimeController(ApplicationDbContext context)
+        public AddedAnimeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<IActionResult> LikedList(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var likedAnime = await _context.LikedAnime
-                .Where(m => m.UserId == id)
-                .Join(_context.Anime, a => a.AnimeId, g => g.Id, (a, g) => g)
-                .ToListAsync();
-
-            return View(likedAnime);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Like(int animeId)
+        public async Task<IActionResult> Save(int animeId)
         {
             UserInfo user = await _context.UserInfo.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
 
-            var likedAnime = new LikedAnime
+            var likedAnime = new AddedAnime
             {
                 UserId = user.Id,
                 AnimeId = animeId,
-                
+
             };
 
-            _context.LikedAnime.Add(likedAnime);
+            _context.AddedAnime.Add(likedAnime);
 
             await _context.SaveChangesAsync();
 
@@ -50,25 +35,25 @@ namespace animatchWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Unlike(int animeId)
+        public async Task<IActionResult> UnSave(int animeId)
         {
             UserInfo user = await _context.UserInfo.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
 
-            var likedAnime = await _context.LikedAnime.FirstOrDefaultAsync(l => l.AnimeId == animeId && l.UserId == user.Id);
+            var likedAnime = await _context.AddedAnime.FirstOrDefaultAsync(l => l.AnimeId == animeId && l.UserId == user.Id);
 
             if (likedAnime != null)
             {
-                _context.LikedAnime.Remove(likedAnime);
+                _context.AddedAnime.Remove(likedAnime);
                 await _context.SaveChangesAsync();
             }
 
             return RedirectToAction("Details", "Home", new { id = animeId });
         }
 
-        public async Task<bool> IsLiked(int animeId, string email)
+        public async Task<bool> IsAdded(int animeId, string email)
         {
             UserInfo user = await _context.UserInfo.FirstOrDefaultAsync(u => u.Email == email);
-            var likedAnime = await _context.LikedAnime.FirstOrDefaultAsync(l => l.AnimeId == animeId && l.UserId == user.Id);
+            var likedAnime = await _context.AddedAnime.FirstOrDefaultAsync(l => l.AnimeId == animeId && l.UserId == user.Id);
 
             if (likedAnime != null)
             {

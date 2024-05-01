@@ -1,0 +1,109 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<animatchWeb.Areas.Identity.Data.ApplicationUser> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<animatchWeb.Areas.Identity.Data.ApplicationUser> UserManager
+
+@model Tuple<animatchWeb.Models.Anime, List<animatchWeb.Models.Review>, List<animatchWeb.Models.Genre>, List<animatchWeb.Models.UserInfo>, bool, bool>
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container">
+    <div class="anime-card">
+        <img src="@Model.Item1.Photo" alt="anime photo" />
+        <div class="anime-card-text">
+            <h2>@Model.Item1.Name</h2>
+            <p>@Model.Item1.Text</p>
+            <p>@Model.Item1.Year</p>
+            <p>@Model.Item1.Imdbrate</p>
+            <div>
+                @foreach (var genre in Model.Item3)
+                {
+                    <p>@genre.Name</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @foreach (var review in Model.Item2)
+    {
+        var userInfo = Model.Item4.FirstOrDefault(u => u.Id == review.UserId);
+        <div class="review">
+            <a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo.Id">
+                <p>@userInfo.Username</p>
+                <img src="@userInfo.Photo" alt="User Photo" />
+            </a>
+            <div class="review-text">@review.Text</div>
+            <div class="review-rate">Rate: @review.Rate</div>
+        </div>
+    }
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div>
+            <form asp-action="LeaveReview" asp-controller="Review" method="post">
+                <input type="hidden" name="animeId" value="@Model.Item1.Id" />
+                <textarea name="reviewText">Напишіть відгук</textarea>
+                <select name="reviewRate">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <button type="submit">Залишити відгук</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <p>Увійдіть, щоб залишити відгук</p>
+    }
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div>
+            <form asp-action="Add" asp-controller="AddedAnime" method="post">
+                <input type="hidden" name="animeId" value="@Model.Item1.Id" />
+                <button type="submit">Додати на профіль</button>
+            </form>
+        </div>
+        <div id="likeStatus">
+            @if (Model.Item5)
+            {
+                <form id="likeForm" asp-action="UnLike" asp-controller="LikedAnime" method="post">
+                    <input type="hidden" name="animeId" value="@Model.Item1.Id" />
+                    <button type="submit" id="unLikeButton">
+                        <img src="https://cdn-icons-png.freepik.com/256/2077/2077502.png?ga=GA1.1.699472927.1713131875" />
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form id="likeForm" asp-action="Like" asp-controller="LikedAnime" method="post">
+                    <input type="hidden" name="animeId" value="@Model.Item1.Id" />
+                    <button type="submit" id="likeButton">
+                        <img src="https://cdn-icons-png.freepik.com/256/1077/1077035.png?semt=ais_hybrid" />
+                    </button>
+                </form>
+            }
+        </div>
+        <div id="SaveStatus">
+            @if (Model.Item6)
+            {
+                <form id="addForm" asp-action="UnSave" asp-controller="AddedAnime" method="post">
+                    <input type="hidden" name="animeId" value="@Model.Item1.Id" />
+                    <button type="submit" id="unSaveButton">
+                        <img src="https://cdn.iconscout.com/icon/free/png-256/free-save-2694322-2236318.png" />
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form id="likeForm" asp-action="Save" asp-controller="AddedAnime" method="post">
+                    <input type="hidden" name="animeId" value="@Model.Item1.Id" />
+                    <button type="submit" id="saveButton">
+                        <img src="https://img.myloview.com/stickers/save-icon-isolated-on-white-background-bookmark-symbol-modern-simple-vector-for-web-site-or-mobile-app-700-216346253.jpg" />
+                    </button>
+                </form>
+            }
+        </div>
+    }
+
+</div>

@@ -1,21 +1,38 @@
-﻿@model animatchWeb.Models.Anime
+﻿@model Tuple<animatchWeb.Models.Anime, List<animatchWeb.Models.Review>, List<animatchWeb.Models.Genre>, List<animatchWeb.Models.UserInfo>>
 
 @{
-	ViewData["Title"] = "Details";
+    ViewData["Title"] = "Random Anime";
 }
 
 <div class="container">
-	<div class="anime-card">
-		<img src="@Model.Photo" alt="amine photo" />
-		<div class="anime-card-text">
-			<h2>@Model.Name</h2>
-			<p>@Model.Text</p>
-			<p>@Model.Year</p>
-			<p>@Model.Imdbrate</p>
-		</div>
-
-	</div>
-	<form asp-action="Random" asp-controller="Home" method="post">
-		<button type="submit" class="btn btn-primary">Generate Random Anime</button>
-	</form>
+        <div class="anime-card">
+            <img src="@Model.Item1.Photo" alt="Anime photo" />
+            <div class="anime-card-text">
+                <h2>@Model.Item1.Name</h2>
+                <p>@Model.Item1.Text</p>
+                <p>@Model.Item1.Year</p>
+                <p>@Model.Item1.Imdbrate</p>
+                <div>
+                    @foreach (var genre in Model.Item3)
+                    {
+                        <p>@genre.Name</p>
+                    }
+                </div>
+            </div>
+        </div>
+        @foreach (var review in Model.Item2)
+        {
+            var userInfo = Model.Item4.FirstOrDefault(u => u.Id == review.UserId);
+            <div class="review">
+                <a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo.Id">
+                    <p>@userInfo.Username</p>
+                    <img src="@userInfo.Photo" alt="User Photo" />
+                </a>
+                <div class="review-text">@review.Text</div>
+                <div class="review-rate">Rate: @review.Rate</div>
+            </div>
+        }
+    <form asp-action="Random" asp-controller="Home" method="post">
+        <button type="submit" class="btn btn-primary">Generate Random Anime</button>
+    </form>
 </div>

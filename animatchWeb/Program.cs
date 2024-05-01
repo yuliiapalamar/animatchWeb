@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using animatchWeb.Areas.Identity.Data;
+using animatchWeb.Controllers;
 
 namespace animatchWeb
 {
@@ -34,7 +35,6 @@ namespace animatchWeb
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             });
-
 
             var app = builder.Build();
 
