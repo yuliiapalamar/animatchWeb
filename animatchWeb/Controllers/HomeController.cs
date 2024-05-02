@@ -30,7 +30,17 @@ namespace animatchWeb.Controllers
             //var animeList = await _animeController.GetAllAnime("");
             //var randomAnime = animeList[random.Next(animeList.Count)];
             var randomAnime = await _animeController.GetRandomAnime();
-            return View(randomAnime);
+            var isLiked = false;
+            var isAdded = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.Identity.Name;
+                isLiked = await _likedController.IsLiked(randomAnime.Item1.Id, userId);
+                isAdded = await _addedAnimeController.IsAdded(randomAnime.Item1.Id, userId);
+            }
+            var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>, bool, bool>(randomAnime.Item1, randomAnime.Item2, randomAnime.Item3, randomAnime.Item4, isLiked, isAdded);
+            return View(model);
+            
         }
 
         public IActionResult Privacy()

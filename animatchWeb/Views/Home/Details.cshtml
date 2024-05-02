@@ -58,12 +58,7 @@
     }
     @if (SignInManager.IsSignedIn(User))
     {
-        <div>
-            <form asp-action="Add" asp-controller="AddedAnime" method="post">
-                <input type="hidden" name="animeId" value="@Model.Item1.Id" />
-                <button type="submit">Додати на профіль</button>
-            </form>
-        </div>
+        
         <div id="likeStatus">
             @if (Model.Item5)
             {

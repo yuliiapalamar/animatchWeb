@@ -52,7 +52,7 @@ namespace animatchWeb.Controllers
             await _context.SaveChangesAsync();
 
             // Перенаправляємо на сторінку з деталями аніме
-            return RedirectToAction("Details", "Anime", new { id = animeId });
+            return RedirectToAction("Details", "Home", new { id = animeId });
         }
     }
 }
