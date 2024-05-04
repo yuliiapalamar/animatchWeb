@@ -11,11 +11,13 @@ namespace animatchWeb.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UserInfoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UserInfoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<List<UserInfo>> GetAllUsers()
@@ -104,6 +106,11 @@ namespace animatchWeb.Controllers
                         // Оновити користувача в Identity
                         await _userManager.UpdateAsync(identityUser);
                     }
+                    if (originalEmail != userInfo.Email)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -184,6 +191,14 @@ namespace animatchWeb.Controllers
             // Зберегти зміни в базі даних
             _context.Update(user);
             await _context.SaveChangesAsync();
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser.Email == userInIdentity.Email)
+            {
+                // Якщо користувач не автентифікований, перенаправляємо його на сторінку входу
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
 
             return RedirectToAction("ContentManagement", "Home"); // Перенаправити на сторінку управління контентом
         }

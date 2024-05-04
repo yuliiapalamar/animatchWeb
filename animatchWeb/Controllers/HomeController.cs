@@ -16,13 +16,13 @@ namespace animatchWeb.Controllers
         private readonly ReviewController _reviewController;
         private readonly UserInfoController _userInfoController;
 
-        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _likedController = new LikedAnimeController(context);
             _animeController = new AnimeController(context);
             _addedAnimeController = new AddedAnimeController(context);
             _reviewController = new ReviewController(context);
-            _userInfoController = new UserInfoController(context, userManager);
+            _userInfoController = new UserInfoController(context, userManager, signInManager);
         }
 
         public async Task<IActionResult> Index(string searchString)
