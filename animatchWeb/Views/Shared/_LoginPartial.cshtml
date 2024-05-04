@@ -17,6 +17,9 @@
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item">
+                <a id="manage" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContentManagement">Контент</a>
+            </li>
+            <li class="nav-item">
                 <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo?.Id">Hello Admin!</a>
             </li>
         }
