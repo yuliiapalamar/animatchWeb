@@ -10,77 +10,59 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Профіль</h1>
-
 <div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Username
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Item1.Username
-        </dd>
-        <dt class="col-sm-2">
-            Email
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Item1.Email
-        </dd>
-        <dt class="col-sm-2">
-            Name
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Item1.Name
-        </dd>
-        <dt class="col-sm-2">
-            Level
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Item1.Level
-        </dd>
-        <dt class="col-sm-2">
-            Text
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Item1.Text
-        </dd>
-        <dt class="col-sm-2">
-            Photo
-        </dt>
-        <dd class="col-sm-10">
-            <img src="@Model.Item1.Photo" alt="User Photo" />
-            
-        </dd>
-        <dt class="col-sm-2">
-            WatchedCount
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Item1.WatchedCount
-        </dd>
-    </dl>
-</div>
-@if (SignInManager.IsSignedIn(User) && UserManager.GetUserName(User) == Model.Item1.Email)
-    {
-        <div>
-        <a asp-action="Edit" asp-route-id="@Model.Item1?.Id">Edit</a>
-        </div>
-
-    }
-<div class="container p-5">
-    <div class="row">
-    @foreach(Anime anime in Model.Item2)
-    {
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <a asp-controller="Home" asp-action="Details" asp-route-id="@anime.Id">
-                <div class="card">
-                    <img src="@anime.Photo" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <p class="card-text">@anime.Name</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-    }
-</div>
+	<div class="container profile">
+		<img src="@Model.Item1.Photo" alt="User Photo" class="profile-image" height="300" width="300" />
+		<div class="profile-description">
+			<h1>
+				@Model.Item1.Name
+			</h1>
+			<h3>
+				@if (Model.Item1.Level == 1)
+				{
+					<p>Початківець</p>
+				}
+				else if (Model.Item1.Level == 2)
+				{
+					<p>Досвідчений анімешник</p>
+				}
+				else if (Model.Item1.Level == 3)
+				{
+					<p>Любитель конкретних жанрів</p>
+				}
+				else
+				{
+					<p>лох</p>
+				}
+			</h3>
+			<p class="profile-description-text">
+				@Model.Item1.Text
+			</p>
+			<p>
+				Watched anime: @Model.Item1.WatchedCount
+			</p>
+			@if (SignInManager.IsSignedIn(User) && UserManager.GetUserName(User) == Model.Item1.Email)
+			{
+				<a asp-action="Edit" class="btn btn-border" asp-route-id="@Model.Item1?.Id">Edit</a>
+			}
+		</div>
+	</div>
+	<h1 class="profile-favourites"> УЛЮБЕНІ АНІМЕ </h1>
+	<div class="container p-5">
+		<div class="row">
+			@foreach(Anime anime in Model.Item2)
+			{
+				<div class="col-lg-3 col-md-6 col-sm-12">
+					<a asp-controller="Home" asp-action="Details" asp-route-id="@anime.Id">
+						<div class="card">
+							<img src="@anime.Photo" class="card-img-top" alt="...">
+							<div class="card-body">
+								<p class="card-text">@anime.Name</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			}
+		</div>
+	</div>
 </div>

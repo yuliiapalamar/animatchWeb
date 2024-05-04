@@ -7,9 +7,6 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-a {
-  color: #0077cc;
-}
 
 .btn-primary {
   color: #fff;
@@ -46,3 +43,42 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+.pr-5 {
+      padding-right: 3rem;
+}
+
+.ml-5 {
+    margin-left: 3rem;
+}
+
+.nav-patrial {
+    margin-left: 3rem;
+    padding-left: 3rem;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center; /* Вирівнювання елементів по вертикалі */
+}
+
+.navbar-nav > li {
+    margin-right: 15px; /* Відступ між елементами навбару */
+}
+
+.nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Вирівнювання тексту із зображенням по центру */
+    gap: 5px; /* Відступ між зображенням і текстом */
+}
+
+.nav-link img {
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Плавний перехід */
+}
+
+.nav-link:hover img {
+    transform: scale(1.1); /* Збільшення масштабу при наведенні */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Додавання тіні */
+}
+
