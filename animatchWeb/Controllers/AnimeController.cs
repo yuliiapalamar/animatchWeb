@@ -88,5 +88,58 @@ namespace animatchWeb.Controllers
             return model;
 		}
 
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var anime = await _context.Anime.FindAsync(id);
+            if (anime == null)
+            {
+                return NotFound();
+            }
+            return View(anime);
+        }
+
+        // POST: Anime/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Text,Year,Photo,Imdbrate")] Anime anime)
+        {
+            if (id != anime.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(anime);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AnimeExists(anime.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return RedirectToAction("ContentManagement", "Home");
+        }
+
+        private bool AnimeExists(int id)
+        {
+            return _context.Anime.Any(e => e.Id == id);
+        }
+
+
     }
 }

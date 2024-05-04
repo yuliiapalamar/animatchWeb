@@ -1,0 +1,133 @@
+﻿@model Tuple<List<Anime>, List<animatchWeb.ViewModels.ReviewViewModel>, List<UserInfo>>
+
+@{
+    ViewData["Title"] = "Content Management";
+}
+
+<h1>Редагування контенту</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="#anime" class="list-group-item list-group-item-action">Аніме</a>
+                <a href="#comments" class="list-group-item list-group-item-action">Коментарі</a>
+                <a href="#users" class="list-group-item list-group-item-action">Користувачі</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="anime" class="mt-3">
+                <h3>Аніме</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>N</th>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Text</th>
+                            <th>Year</th>
+                            <th>Imdbrate</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var anime in Model.Item1)
+                        {
+                            <tr>
+                                <td>@(Model.Item1.IndexOf(anime) + 1)</td>
+                                <td><img src="@anime.Photo" alt="Anime Photo" width="100"></td>
+                                <td>@anime.Name</td>
+                                <td>@(anime.Text.Length > 50 ? anime.Text.Substring(0, 50) + "..." : anime.Text)</td>
+                                <td>@anime.Year</td>
+                                <td>@anime.Imdbrate</td>
+                                <td><a class="nav-link text-dark" asp-area="" asp-controller="Anime" asp-action="Edit" asp-route-id="@anime.Id"><img src="https://www.shutterstock.com/image-vector/pencil-tool-text-icon-simple-260nw-1262488891.jpg" width="100" /></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div id="comments" class="mt-3">
+                <h3>Коментарі</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>N</th>
+                            <th>Користувач</th>
+                            <th>Аніме</th>
+                            <th>Відгук</th>
+                            <th>Оцінка</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var review in Model.Item2)
+                        {
+                            <tr>
+                                <td>@(Model.Item2.IndexOf(review) + 1)</td>
+                                <td>@review.Username</td>
+                                <td>@review.AnimeName</td>
+                                <td>@review.Text</td>
+                                <td>@review.Rate</td>
+                                <td>
+                                    <form asp-action="DeleteReview" asp-controller="Review" method="post">
+                                        <input type="hidden" name="reviewId" value="@review.Id" />
+                                        <button type="submit" class="btn btn-danger">
+                                            <img src="https://static-00.iconduck.com/assets.00/trash-icon-462x512-njvey5nf.png" width="100" />
+                                        </button>
+                                    </form>
+                                 </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div id="users" class="mt-3">
+                <h3>Користувачі</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>N</th>
+                            <th>Фото</th>
+                            <th>Користувач</th>
+                            <th>Опис</th>
+                            <th>Адмін</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Item3)
+                        {
+                            <tr>
+                                <td>@(Model.Item3.IndexOf(user) + 1)</td>
+                                <td><a><img src="@user.Photo" width="100" /></a></td>
+                                <td>@user.Username</td>
+                                <td>@user.Text</td>
+                                <td>
+                                    <form id="toggleAdminForm-@user.Id" asp-action="ToggleAdmin" asp-controller="UserInfo" method="post">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="toggleAdminSwitch-@user.Id" onclick="confirmToggle(@user.Id)" name="isAdmin" @(user.isAdmin ? "checked" : "") />
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function confirmToggle(userId) {
+        var confirmation = confirm("Ви впевнені, що хочете змінити статус адміністратора?");
+        if (confirmation) {
+            document.getElementById("toggleAdminForm-" + userId).submit();
+        } else {
+            // Скасовано
+            var checkbox = document.getElementById("toggleAdminSwitch-" + userId);
+            checkbox.checked = !checkbox.checked; // Змінити стан чекбоксу назад
+        }
+    }
+</script>
