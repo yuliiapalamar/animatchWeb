@@ -4,51 +4,76 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Редагувати профіль</h1>
+<h1 class="text-center">Редагувати профіль</h1>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" method="post" id="editForm">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
+    <div class="profile-edit">
+        <div class="profile-edit-photo">
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <input asp-for="Photo" class="form-control" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="profile-edit-information">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="form-control"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="Username" class="control-label"></label>
-        <input asp-for="Username" class="form-control" />
-        <span asp-validation-for="Username" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" id="emailInput" readonly /> <!-- Встановлення атрибута readonly -->
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+    
+    <div class="flex-row gap-2">
+    <button type="submit" class="btn btn-border">Зберегти</button>
+    <a asp-action="Details" class="btn btn-border" asp-route-id="@Model?.Id">Повернутися до профілю</a>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Text" class="control-label"></label>
-        <textarea asp-for="Text" class="form-control"></textarea>
-        <span asp-validation-for="Text" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Photo" class="control-label"></label>
-        <input asp-for="Photo" class="form-control" />
-        <span asp-validation-for="Photo" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary" >Зберегти</button>
 </form>
 
-<div>
-    <a asp-action="Details" asp-route-id="@Model?.Id">Повернутися до профілю</a>
-</div>
+
+
+<script>
+    // Очистити текст в полі вводу під час фокусу, якщо це не поле електронної пошти
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('editForm');
+        const inputs = form.querySelectorAll('input:not(#emailInput), textarea');
+
+        inputs.forEach(input => {
+            input.addEventListener('focus', function () {
+                if (this.value === this.defaultValue) {
+                    this.value = '';
+                }
+            });
+
+            input.addEventListener('blur', function () {
+                if (this.value === '') {
+                    this.value = this.defaultValue;
+                }
+            });
+        });
+    });
+</script>

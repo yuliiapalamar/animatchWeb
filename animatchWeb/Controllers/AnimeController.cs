@@ -61,6 +61,8 @@ namespace animatchWeb.Controllers
         }
 
 
+
+
         // Метод для отримання випадкового аніме зі списку
         public async Task<Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>> GetRandomAnime()
         {
