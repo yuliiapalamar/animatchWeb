@@ -625,6 +625,25 @@ button {
 
 
 
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+}
+.content-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+
+
+
 
 
 
@@ -687,7 +706,8 @@ input[type="checkbox"].form-check-input:checked::after {
 .text-btn {
     color: #E04076;
     text-decoration: underline;
-    align-self: center
+    align-self: start;
+    align-self: start;
 }
 
 .text-bnt-container {

@@ -6,128 +6,170 @@
 
 <h1>Редагування контенту</h1>
 
-<div class="container">
+<div class="content">
     <div class="row">
-        <div class="col-md-3">
-            <div class="list-group">
-                <a href="#anime" class="list-group-item list-group-item-action">Аніме</a>
-                <a href="#comments" class="list-group-item list-group-item-action">Коментарі</a>
-                <a href="#users" class="list-group-item list-group-item-action">Користувачі</a>
-            </div>
-        </div>
-        <div class="col-md-9">
-            <div id="anime" class="mt-3">
-                <h3>Аніме</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>N</th>
-                            <th>Photo</th>
-                            <th>Name</th>
-                            <th>Text</th>
-                            <th>Year</th>
-                            <th>Imdbrate</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var anime in Model.Item1)
-                        {
-                            <tr>
-                                <td>@(Model.Item1.IndexOf(anime) + 1)</td>
-                                <td><img src="@anime.Photo" alt="Anime Photo" width="100"></td>
-                                <td>@anime.Name</td>
-                                <td>@(anime.Text.Length > 50 ? anime.Text.Substring(0, 50) + "..." : anime.Text)</td>
-                                <td>@anime.Year</td>
-                                <td>@anime.Imdbrate</td>
-                                <td><a class="nav-link text-dark" asp-area="" asp-controller="Anime" asp-action="Edit" asp-route-id="@anime.Id"><img src="https://www.shutterstock.com/image-vector/pencil-tool-text-icon-simple-260nw-1262488891.jpg" width="100" /></a></td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div id="comments" class="mt-3">
-                <h3>Коментарі</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>N</th>
-                            <th>Користувач</th>
-                            <th>Аніме</th>
-                            <th>Відгук</th>
-                            <th>Оцінка</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var review in Model.Item2)
-                        {
-                            <tr>
-                                <td>@(Model.Item2.IndexOf(review) + 1)</td>
-                                <td>@review.Username</td>
-                                <td>@review.AnimeName</td>
-                                <td>@review.Text</td>
-                                <td>@review.Rate</td>
-                                <td>
-                                    <form asp-action="DeleteReview" asp-controller="Review" method="post">
-                                        <input type="hidden" name="reviewId" value="@review.Id" />
-                                        <button type="submit" class="btn btn-danger">
-                                            <img src="https://static-00.iconduck.com/assets.00/trash-icon-462x512-njvey5nf.png" width="100" />
-                                        </button>
-                                    </form>
-                                 </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div id="users" class="mt-3">
-                <h3>Користувачі</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>N</th>
-                            <th>Фото</th>
-                            <th>Користувач</th>
-                            <th>Опис</th>
-                            <th>Адмін</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in Model.Item3)
-                        {
-                            <tr>
-                                <td>@(Model.Item3.IndexOf(user) + 1)</td>
-                                <td><a><img src="@user.Photo" width="100" /></a></td>
-                                <td>@user.Username</td>
-                                <td>@user.Text</td>
-                                <td>
-                                    <form id="toggleAdminForm-@user.Id" asp-action="ToggleAdmin" asp-controller="UserInfo" method="post">
-                                        <input type="hidden" name="userId" value="@user.Id" />
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input" id="toggleAdminSwitch-@user.Id" onclick="confirmToggle(@user.Id)" name="isAdmin" @(user.isAdmin ? "checked" : "") />
-                                        </div>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+	    <div class="col-md-3">
+		    <div class="content-list">
+			    <a href="#anime" class="list-group-item btn btn-border list-group-item-action">Аніме</a>
+				<a href="#comments" class="list-group-item btn btn-border list-group-item-action">Коментарі</a>
+				<a href="#users" class="list-group-item btn btn-border list-group-item-action">Користувачі</a>
+		    </div>
+	    </div>
+        
+	    <div id="anime" class="mt-3 content-section">
+		    <div id="anime" class="mt-3">
+			    <h3>Аніме</h3>
+			    <div class="container p-5">
+				    <div class="row">
+					    @foreach (var item in Model.Item1)
+					    {
+						    <div class="col-lg-3 col-md-6 col-sm-12">
+								    <div class="card">
+									    <img src="@item.Photo" class="card-img-top" alt="...">
+									    <div class="card-body">
+										    <p class="card-text">@item.Name</p>
+										    <a class="nav-link text-dark" asp-area="" asp-controller="Anime" asp-action="Edit" asp-route-id="@item.Id">
+											    <i class="fa-regular fa-pen fa-lg" style="color: #561f6f;"></i>
+										    </a>
+									    </div>
+								    </div>
+						    </div>
+					    }
+
+				    </div>
+			    </div>
+			  @*   <table class="table">
+				   
+				    <tbody>
+				    @foreach (var anime in Model.Item1)
+				    {
+					    <tr>
+						    <td>@(Model.Item1.IndexOf(anime) + 1)</td>
+						    <td><img src="@anime.Photo" alt="Anime Photo" width="100"></td>
+						    <td>@anime.Name</td>
+						    <td>@(anime.Text.Length > 50 ? anime.Text.Substring(0, 50) + "..." : anime.Text)</td>
+						    <td>@anime.Year</td>
+						    <td>@anime.Imdbrate</td>
+						    <td>
+
+							   
+						    </td>
+					    </tr>
+				    }
+				    </tbody>
+			    </table> *@
+		    </div>
+	    </div>
+	    <div id="comments" class="mt-3 content-section" style="display: none;">
+		    <div id="comments" class="mt-3">
+			    <h3>Коментарі</h3>
+			    @foreach (var review in Model.Item2)
+			    {
+				    var userInfo = Model.Item3.FirstOrDefault(u => u.Id == review.UserId);
+				    <div class="review gap-1">
+					    <div class="flex-column">
+						    <a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo.Id">
+							    <img src="@userInfo.Photo" alt="User Photo" height="40" width="40" class="review-user-image" />
+						    </a>
+					    </div>
+					    <div class="flex-column w-100 review-user-text">
+						    <a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo.Id">
+							    <p class="review-user-name">@userInfo.Name</p>
+						    </a>
+						    <div class="review-text">@review.Text</div>
+
+					    </div>
+					    <div class="review-rate align-self-center">
+						    @if (review.Rate == 1)
+						    {
+							    <i class="far fa-face-smile fa-xl" style="color: #713E79"></i>
+						    }
+						    else if (review.Rate == 2)
+						    {
+							    <i class="far fa-face-meh fa-xl" style="color: #713E79"></i>
+						    }
+						    else if (review.Rate == 3)
+						    {
+							    <i class="far fa-face-sad-tear fa-xl" style="color: #713E79"></i>
+						    }
+					    </div>
+					    <form asp-action="DeleteReview" asp-controller="Review" class="align-self-center" method="post">
+						    <input type="hidden" name="reviewId" value="@review.Id" />
+						    <button type="submit" class="btn bg-transparen align-self-centert">
+								<i class="fa-solid fa-trash fa-lg" style="color: #401f51;"></i>
+						    </button>
+					    </form>
+				    </div>
+			    }
+			    
+		    </div>
+	    </div>
+	    <div id="users" class="mt-3 content-section" style="display: none;">
+		   
+		    <div id="users" class="mt-3">
+			    <h3>Користувачі</h3>
+				
+			    @foreach (var user in Model.Item3)
+			    {
+				    
+				    <div class="review gap-1">
+					    <div class="flex-column">
+						    <a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@user.Id">
+							    <img src="@user.Photo" alt="User Photo" height="40" width="40" class="review-user-image" />
+						    </a>
+					    </div>
+					    <div class="flex-column w-100 review-user-text">
+						    <a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@user.Id">
+							    <p class="review-user-name">@user.Name</p>
+						    </a>
+						    <div class="review-text">@user.Text</div>
+
+					    </div>
+						<div class="checkbox">
+							<form id="toggleAdminForm-@user.Id" asp-action="ToggleAdmin" asp-controller="UserInfo" method="post">
+								<input type="hidden" name="userId" value="@user.Id" />
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="form-check-input" id="toggleAdminSwitch-@user.Id" onclick="confirmToggle(@user.Id)" name="isAdmin" @(user.isAdmin ? "checked" : "") />
+								</div>
+							</form>
+						</div>
+				    </div>
+			    }
+			    
+	    </div>
+	  
         </div>
     </div>
 </div>
 
 
 <script>
-    function confirmToggle(userId) {
-        var confirmation = confirm("Ви впевнені, що хочете змінити статус адміністратора?");
-        if (confirmation) {
-            document.getElementById("toggleAdminForm-" + userId).submit();
-        } else {
-            // Скасовано
-            var checkbox = document.getElementById("toggleAdminSwitch-" + userId);
-            checkbox.checked = !checkbox.checked; // Змінити стан чекбоксу назад
-        }
+    // Функція для переключення видимості блоків контенту
+    function showContent(sectionId) {
+        // Сховати всі блоки контенту
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        // Показати вибраний блок контенту
+        document.getElementById(sectionId).style.display = 'block';
     }
+
+    // Додати обробник подій для кожного посилання в списку
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.list-group-item');
+
+        links.forEach(link => {
+            link.addEventListener('click', (event) => {
+                // Отримати id блоку контенту, на який клікнули
+                const sectionId = link.getAttribute('href').substring(1); // Відкидаємо '#'
+
+                // Показати вибраний блок контенту
+                showContent(sectionId);
+
+                // Заборонити дійшовання сторінки за замовчуванням
+                event.preventDefault();
+            });
+        });
+    });
 </script>
