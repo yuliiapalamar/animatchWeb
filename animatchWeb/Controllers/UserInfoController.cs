@@ -11,13 +11,20 @@ namespace animatchWeb.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UserInfoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UserInfoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
+        public async Task<List<UserInfo>> GetAllUsers()
+        {
+            var usersList = await _context.UserInfo.ToListAsync();
+            return usersList;
+        }
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -99,6 +106,11 @@ namespace animatchWeb.Controllers
                         // Оновити користувача в Identity
                         await _userManager.UpdateAsync(identityUser);
                     }
+                    if (originalEmail != userInfo.Email)
+                    {
+                        await _signInManager.SignOutAsync();
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -138,5 +150,58 @@ namespace animatchWeb.Controllers
 
 			return View(userInfo);
 		}
-	}
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleAdmin(int userId, bool isAdmin)
+        {
+            var user = await _context.UserInfo.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Отримати користувача з Identity за допомогою email
+            var userInIdentity = await _userManager.FindByEmailAsync(user.Email);
+            if (userInIdentity == null)
+            {
+                return NotFound();
+            }
+
+            // Перевірити наявність ролей
+            var roles = await _userManager.GetRolesAsync(userInIdentity);
+            bool admin = await _userManager.IsInRoleAsync(userInIdentity, "Admin");
+            bool hasAdminRole = roles.Contains("Admin");
+            bool hasUserRole = roles.Contains("User");
+
+            // Якщо isAdmin = true, тоді видалимо роль Admin і додамо роль User
+            if (admin)
+            {
+                await _userManager.RemoveFromRoleAsync(userInIdentity, "Admin");
+                await _userManager.AddToRoleAsync(userInIdentity, "User");
+                user.isAdmin = false; // Оновити isAdmin в базі даних
+            }
+            // Якщо isAdmin = false, тоді видалимо роль User і додамо роль Admin
+            else 
+            {
+                await _userManager.RemoveFromRoleAsync(userInIdentity, "User");
+                await _userManager.AddToRoleAsync(userInIdentity, "Admin");
+                user.isAdmin = true; // Оновити isAdmin в базі даних
+            }
+
+            // Зберегти зміни в базі даних
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser.Email == userInIdentity.Email)
+            {
+                // Якщо користувач не автентифікований, перенаправляємо його на сторінку входу
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("ContentManagement", "Home"); // Перенаправити на сторінку управління контентом
+        }
+
+    }
 }

@@ -1,7 +1,10 @@
+using animatchWeb.Areas.Identity.Data;
 using animatchWeb.Data;
 using animatchWeb.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using animatchWeb.ViewModels;
 
 namespace animatchWeb.Controllers
 {
@@ -10,12 +13,16 @@ namespace animatchWeb.Controllers
         private readonly AnimeController _animeController;
         private readonly LikedAnimeController _likedController;
         private readonly AddedAnimeController _addedAnimeController;
+        private readonly ReviewController _reviewController;
+        private readonly UserInfoController _userInfoController;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _likedController = new LikedAnimeController(context);
             _animeController = new AnimeController(context);
             _addedAnimeController = new AddedAnimeController(context);
+            _reviewController = new ReviewController(context);
+            _userInfoController = new UserInfoController(context, userManager, signInManager);
         }
 
         public async Task<IActionResult> Index(string searchString)
@@ -66,6 +73,16 @@ namespace animatchWeb.Controllers
                 isAdded = await _addedAnimeController.IsAdded(id, userId);
             }
             var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>, bool, bool>(animeDetails.Item1, animeDetails.Item2, animeDetails.Item3, animeDetails.Item4, isLiked, isAdded);
+            return View(model);
+        }
+
+        public async Task<IActionResult> ContentManagement()
+        {
+            var animeList = await _animeController.GetAllAnime("");
+            var reviewList = await _reviewController.GetAllReviews();
+            var userList = await _userInfoController.GetAllUsers(); 
+
+            var model = new Tuple<List<Anime>, List<ReviewViewModel>, List<UserInfo>>(animeList, reviewList, userList);
             return View(model);
         }
     }
