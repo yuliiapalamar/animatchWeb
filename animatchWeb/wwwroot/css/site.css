@@ -69,16 +69,17 @@ button.accept-policy {
 }
 
 .nav-patrial {
-    margin-left: 1rem;
+    
 }
 
 .navbar-nav {
     display: flex;
     align-items: center; /* Вирівнювання елементів по вертикалі */
+    
 }
 
 .navbar-nav > li {
-    margin-right: 1rem; /* Відступ між елементами навбару */
+    
 }
 
 .nav-link {
@@ -255,6 +256,11 @@ body {
     text-outline: none;
 
 }
+
+.liked>a {
+    text-decoration: none;
+    text-outline: none;
+}
 .card-text {
     text-outline: none;
     text-decoration: none;
@@ -349,6 +355,7 @@ body {
 .btn-more {
     border: none;
     background-color: transparent;
+    color: purple;
 }
 
 .anime-card-text-rate {
@@ -504,6 +511,10 @@ button {
     margin-top: 20px;
     box-shadow: 0 0 20px rgba(128, 0, 128, 0.5); /* Змінюємо тінь на фіолетову при наведенні */
 }
+.saved>a {
+    text-decoration: none;
+    text-outline: none;
+}
 
 .review-user-image {
     border-radius: 20px;
@@ -635,25 +646,41 @@ button {
 }
 .content-list {
     display: flex;
+    flex: 1;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
+/* Заборона обводки на елементі <a> при фокусі та виборі */
+.content-list > a:focus,
+.content-list > a:active,
+.content-list > a:hover {
+    outline: none;
+}
+
+.content-list-group-item.active {
+    outline: none;
+}
+.content-list-group-item-action {
+    outline: none;
+}
+.content-list-group-item-action:active {
+    outline: none;
+}
+.content-list-group-item.disabled, .content-list-group-item:disabled {
+outline: none;
+}
 
 
 
 
-
-
-
-
-    .account {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: start;
-    }
+.account {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
 
 /* Змінює стиль стандартного чекбокса */
 input[type="checkbox"].form-check-input {

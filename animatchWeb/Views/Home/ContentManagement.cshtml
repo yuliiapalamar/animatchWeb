@@ -10,9 +10,9 @@
     <div class="row">
 	    <div class="col-md-3">
 		    <div class="content-list">
-			    <a href="#anime" class="list-group-item btn btn-border list-group-item-action">Аніме</a>
-				<a href="#comments" class="list-group-item btn btn-border list-group-item-action">Коментарі</a>
-				<a href="#users" class="list-group-item btn btn-border list-group-item-action">Користувачі</a>
+				<a href="#anime" class="content-list-group-item btn btn-border content-list-group-item-action">Аніме</a>
+				<a href="#comments" class="content-list-group-item btn btn-border content-list-group-item-action">Коментарі</a>
+				<a href="#users" class="content-list-group-item btn btn-border content-list-group-item-action">Користувачі</a>
 		    </div>
 	    </div>
         
@@ -38,26 +38,7 @@
 
 				    </div>
 			    </div>
-			  @*   <table class="table">
-				   
-				    <tbody>
-				    @foreach (var anime in Model.Item1)
-				    {
-					    <tr>
-						    <td>@(Model.Item1.IndexOf(anime) + 1)</td>
-						    <td><img src="@anime.Photo" alt="Anime Photo" width="100"></td>
-						    <td>@anime.Name</td>
-						    <td>@(anime.Text.Length > 50 ? anime.Text.Substring(0, 50) + "..." : anime.Text)</td>
-						    <td>@anime.Year</td>
-						    <td>@anime.Imdbrate</td>
-						    <td>
-
-							   
-						    </td>
-					    </tr>
-				    }
-				    </tbody>
-			    </table> *@
+			  
 		    </div>
 	    </div>
 	    <div id="comments" class="mt-3 content-section" style="display: none;">
@@ -157,7 +138,7 @@
 
     // Додати обробник подій для кожного посилання в списку
     document.addEventListener('DOMContentLoaded', () => {
-        const links = document.querySelectorAll('.list-group-item');
+		const links = document.querySelectorAll('.content-list-group-item');
 
         links.forEach(link => {
             link.addEventListener('click', (event) => {

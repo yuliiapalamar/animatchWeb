@@ -5,7 +5,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject animatchWeb.Data.ApplicationDbContext DbContext
 
-<ul class="navbar-nav align-items-center">
+<ul class="navbar-nav gap-3 align-items-center">
     @if (SignInManager.IsSignedIn(User))
     {
         var userInfo = DbContext.UserInfo.FirstOrDefault(u => u.Email == User.Identity.Name);
@@ -23,11 +23,17 @@
         {
             <li class="nav-item">
 
-                <a id="manage" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContentManagement">Контент</a>
+	            <a id="manage" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContentManagement">
+		            <img src="/assets/images/edit.svg" height="36" width="36"/>
+                    <p class="nav-text">контент</p>
+		            
+	            </a>
             </li>
-            <li class="nav-item">
-                <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo?.Id">Hello Admin!</a>
-
+            <li class="nav-item ">
+	            <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo?.Id">
+		            <img src="/assets/images/user.png" class="nav-img" alt="liked" height="36" width="36"/>
+		            <p class="nav-text">адмін</p>
+	            </a>
             </li>
         }
         else
