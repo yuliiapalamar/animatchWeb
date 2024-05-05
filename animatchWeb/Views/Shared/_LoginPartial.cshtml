@@ -5,15 +5,17 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject animatchWeb.Data.ApplicationDbContext DbContext
 
-<ul class="navbar-nav gap-3 align-items-center">
+<ul class="navbar-nav align-items-center">
     @if (SignInManager.IsSignedIn(User))
     {
         var userInfo = DbContext.UserInfo.FirstOrDefault(u => u.Email == User.Identity.Name);
 
         <li class="nav-item align-content-center" >
-	        <a id="manage"  asp-area="" asp-controller="LikedAnime" asp-action="LikedList" asp-route-id="@userInfo?.Id">
-                <img src="/assets/images/liked.png" class="nav-img" alt="liked" height="30" width="32"/>
-		        <p class="nav-text">Збережені</p>
+	        <a id="manage" asp-area="" asp-controller="LikedAnime" asp-action="LikedList" asp-route-id="@userInfo?.Id">
+		        <div class="nav-img-div">
+		        <img src="/assets/images/liked.png" class="nav-img" alt="liked" height="29" width="32"/>
+		        </div>
+		        <p class="nav-text">збережені</p>
 	        </a>
         </li>
 
@@ -27,9 +29,10 @@
         }
         else
         {
-            <li class="nav-item">
+            <li class="nav-item ">
 	            <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo?.Id">
-		            Hello @UserManager.GetUserName(User)!
+		            <img src="/assets/images/user.png" class="nav-img" alt="liked" height="36" width="36"/>
+                    <p class="nav-text">профіль</p>
 	            </a>
             </li>
         }
