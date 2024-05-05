@@ -18,14 +18,31 @@ namespace animatchWeb.Controllers
         }
 
         // Метод для отримання списку всіх аніме
-        public async Task<List<Anime>> GetAllAnime(string SearchString)
+        public async Task<List<Anime>> GetAllAnime(string searchString, List<int> genreIds)
         {
-            var animeList = await _context.Anime.ToListAsync();
-            if (!string.IsNullOrEmpty(SearchString))
+            var animeQuery = _context.Anime.AsQueryable();
+
+            // Фільтрація за назвою аніме
+            if (!string.IsNullOrEmpty(searchString))
             {
-                animeList = animeList.Where(a => a.Name.ToLower().Contains(SearchString.ToLower())).ToList();
+                animeQuery = animeQuery.Where(a => a.Name.ToLower().Contains(searchString.ToLower()));
             }
-            return animeList;
+
+            // Фільтрація за жанрами
+            if (genreIds != null && genreIds.Any())
+            {
+                animeQuery = animeQuery
+                    .Join(_context.AnimeGenre, a => a.Id, ag => ag.AnimeId, (a, ag) => new { Anime = a, AnimeGenre = ag })
+                    .Where(x => genreIds.Contains(x.AnimeGenre.GenreId))
+                    .Select(x => x.Anime)
+                    .Distinct();
+
+            }
+
+            // Отримати відфільтрований список аніме
+            var filteredAnimeList = await animeQuery.ToListAsync();
+
+            return filteredAnimeList;
         }
 
 

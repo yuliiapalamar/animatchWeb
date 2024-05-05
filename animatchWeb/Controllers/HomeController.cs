@@ -15,6 +15,7 @@ namespace animatchWeb.Controllers
         private readonly AddedAnimeController _addedAnimeController;
         private readonly ReviewController _reviewController;
         private readonly UserInfoController _userInfoController;
+        private readonly GenreController _genreController;
 
         public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
@@ -23,12 +24,16 @@ namespace animatchWeb.Controllers
             _addedAnimeController = new AddedAnimeController(context);
             _reviewController = new ReviewController(context);
             _userInfoController = new UserInfoController(context, userManager, signInManager);
+            _genreController = new GenreController(context);
         }
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, List<int> genreIds)
         {
-            var animeList = await _animeController.GetAllAnime(searchString);
-            return View(animeList);
+            var animeList = await _animeController.GetAllAnime(searchString, genreIds);
+            var genreList = await _genreController.GetAllGenre();
+
+            var model = new Tuple<List<Anime>, List<Genre>>(animeList, genreList);
+            return View(model);
         }
 
         public async Task<IActionResult> Random()
@@ -78,7 +83,7 @@ namespace animatchWeb.Controllers
 
         public async Task<IActionResult> ContentManagement()
         {
-            var animeList = await _animeController.GetAllAnime("");
+            var animeList = await _animeController.GetAllAnime("", new List<int>());
             var reviewList = await _reviewController.GetAllReviews();
             var userList = await _userInfoController.GetAllUsers(); 
 
