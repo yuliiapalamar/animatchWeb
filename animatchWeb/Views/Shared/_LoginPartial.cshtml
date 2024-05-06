@@ -10,6 +10,14 @@
     {
         var userInfo = DbContext.UserInfo.FirstOrDefault(u => u.Email == User.Identity.Name);
 
+        <li class="nav-item align-content-center">
+            <a id="manage" asp-area="" asp-controller="Home" asp-action="Recommendation">
+                <div class="nav-img-div">
+                    <img src="/assets/images/liked.png" class="nav-img" alt="liked" height="29" width="32" />
+                </div>
+                <p class="nav-text">Рекомендації</p>
+            </a>
+        </li>
         <li class="nav-item align-content-center" >
 	        <a id="manage" asp-area="" asp-controller="LikedAnime" asp-action="LikedList" asp-route-id="@userInfo?.Id">
 		        <div class="nav-img-div">

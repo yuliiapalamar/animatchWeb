@@ -31,8 +31,11 @@ namespace animatchWeb.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Home", new { id = animeId });
-        }
+			string returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+
+			// Перенаправляємо користувача на поточну сторінку
+			return Redirect(returnUrl);
+		}
 
         [HttpPost]
         public async Task<IActionResult> UnSave(int animeId)
@@ -47,7 +50,10 @@ namespace animatchWeb.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction("Details", "Home", new { id = animeId });
+           string returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+
+			// Перенаправляємо користувача на поточну сторінку
+			return Redirect(returnUrl);
         }
 
         public async Task<bool> IsAdded(int animeId, string email)

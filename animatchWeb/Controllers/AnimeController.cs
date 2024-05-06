@@ -78,8 +78,6 @@ namespace animatchWeb.Controllers
         }
 
 
-
-
         // Метод для отримання випадкового аніме зі списку
         public async Task<Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>> GetRandomAnime()
         {
@@ -159,6 +157,40 @@ namespace animatchWeb.Controllers
             return _context.Anime.Any(e => e.Id == id);
         }
 
+        public async Task<Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>> getRecommendation(int userId)
+        {
+
+            var animeList = _context.Anime
+                .Where(a => !_context.LikedAnime.Any(l => l.AnimeId == a.Id && l.UserId == userId) &&
+                            !_context.AddedAnime.Any(s => s.AnimeId == a.Id && s.UserId == userId) &&
+                            !_context.DislikedAnime.Any(d => d.AnimeId == a.Id && d.UserId == userId) &&
+                            !_context.WatchedAnime.Any(w => w.AnimeId == a.Id && w.UserId == userId))
+                .ToList();
+
+            var randomAnime = animeList.OrderBy(a => Guid.NewGuid()).FirstOrDefault();
+
+            var reviews = await _context.Review
+                .Where(r => r.AnimeId == randomAnime.Id)
+                .ToListAsync();
+
+            // Отримати інформацію про користувача (UserInfo)
+            var userInfos = new List<UserInfo>();
+            foreach (var review in reviews)
+            {
+                var userInfo = await _context.UserInfo.FirstOrDefaultAsync(u => u.Id == review.UserId);
+                userInfos.Add(userInfo);
+            }
+
+            var genres = await _context.AnimeGenre
+                .Where(ag => ag.AnimeId == randomAnime.Id)
+                .Join(_context.Genre, ag => ag.GenreId, g => g.Id, (ag, g) => g)
+                .ToListAsync();
+
+            var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>(randomAnime, reviews, genres, userInfos);
+
+
+            return model;
+        }
 
     }
 }
