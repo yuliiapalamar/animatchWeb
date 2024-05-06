@@ -41,7 +41,7 @@
             <li class="nav-item ">
 	            <a id="manage" class="nav-link text-dark" asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo?.Id">
 		            <img src="/assets/images/user.png" class="nav-img" alt="liked" height="36" width="36"/>
-                    <p class="nav-text">профіль</p>
+                    <p class="nav-text">@userInfo.Username</p>
 	            </a>
             </li>
         }

@@ -11,12 +11,12 @@
 				<form class="account" method="post">
 					<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 					<div class="form-login">
-						<label  asp-for="Input.Email" class="form-label">Email</label>
+						<label  asp-for="Input.Email" class="form-label">пошта</label>
 						<input asp-for="Input.Email" class="form-login-input"  aria-required="true" placeholder="name@example.com"/>
 						<span asp-validation-for="Input.Email" class="text-danger"></span>
 					</div>
 					<div class="form-login">
-						<label asp-for="Input.Password" class="form-label">Password</label>
+						<label asp-for="Input.Password" class="form-label">пароль</label>
 						<input asp-for="Input.Password" class="form-login-input" autocomplete="current-password" aria-required="true" placeholder="password"/>
 						<span asp-validation-for="Input.Password" class="text-danger"></span>
 					</div>
@@ -28,11 +28,6 @@
 					</div>
 					<div class="form-btn">
 						<button class="btn btn-border " type="submit">Вхід</button>
-					</div>
-					<div>
-						<div class="text-bnt-container">
-							<a class="text-btn" asp-page="./ForgotPassword">Забули пароль?</a>
-							</div>
 					</div>
 				</form>
 			</section>

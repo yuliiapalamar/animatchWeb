@@ -27,10 +27,12 @@
 								    <div class="card">
 									    <img src="@item.Photo" class="card-img-top" alt="...">
 									    <div class="card-body">
+											<div class="flex-row justify-content-between">
 										    <p class="card-text">@item.Name</p>
 										    <a class="nav-link text-dark" asp-area="" asp-controller="Anime" asp-action="Edit" asp-route-id="@item.Id">
-											    <i class="fa-regular fa-pen fa-lg" style="color: #561f6f;"></i>
+											    <i class="fa-regular fa-pen-to-square fa-lg" style="color: #3b1f51;"></i>
 										    </a>
+										</div>
 									    </div>
 								    </div>
 						    </div>
@@ -101,6 +103,7 @@
 					    </div>
 					    <div class="flex-column w-100 review-user-text">
 						    <a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@user.Id">
+							    <p class="review-user-name">@user.Username</p>
 							    <p class="review-user-name">@user.Name</p>
 						    </a>
 						    <div class="review-text">@user.Text</div>

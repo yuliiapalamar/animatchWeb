@@ -15,9 +15,9 @@
             <p>@Model.Item1.Year</p>
             <p>Сподобалось усім користувачам</p>
             <div class="anime-card-text-description">
-	            @if (Model.Item1.Text.Length > 100)
+	            @if (Model.Item1.Text.Length > 200)
 	            {
-		            <span class="short-text">@Model.Item1.Text.Substring(0, 100)</span>
+		            <span class="short-text">@Model.Item1.Text.Substring(0, 200)</span>
 		            <span class="full-text" style="display:none;">@Model.Item1.Text</span>
 		            <button class="btn-more">...</button>
 	            }

@@ -39,11 +39,11 @@
 				@Model.Item1.Text
 			</p>
 			<p>
-				Watched anime: @Model.Item1.WatchedCount
+				переглянуто аніме: @Model.Item1.WatchedCount
 			</p>
 			@if (SignInManager.IsSignedIn(User) && UserManager.GetUserName(User) == Model.Item1.Email)
 			{
-				<a asp-action="Edit" class="btn btn-border" asp-route-id="@Model.Item1?.Id">Edit</a>
+				<a asp-action="Edit" class="btn btn-border" asp-route-id="@Model.Item1?.Id">редагувати</a>
 			}
 		</div>
 	</div>
