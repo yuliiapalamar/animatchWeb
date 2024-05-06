@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "animatchWeb", "animatchWeb\animatchWeb.csproj", "{B148F289-D7FE-4FB7-845E-2C33D65C8C21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertData", "InsertData\InsertData.csproj", "{3D657170-A9A5-472E-BADE-7F6AD12CC165}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InsertData", "InsertData\InsertData.csproj", "{3D657170-A9A5-472E-BADE-7F6AD12CC165}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "animatchWebTests", "animatchWebTests\animatchWebTests.csproj", "{A3E7BE4D-2234-4D68-BD5D-B451BB3106A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3D657170-A9A5-472E-BADE-7F6AD12CC165}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D657170-A9A5-472E-BADE-7F6AD12CC165}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D657170-A9A5-472E-BADE-7F6AD12CC165}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3E7BE4D-2234-4D68-BD5D-B451BB3106A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3E7BE4D-2234-4D68-BD5D-B451BB3106A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3E7BE4D-2234-4D68-BD5D-B451BB3106A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3E7BE4D-2234-4D68-BD5D-B451BB3106A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
