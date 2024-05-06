@@ -1,53 +1,76 @@
-﻿@model IEnumerable<animatchWeb.Models.Anime>
+﻿@model Tuple<List<Anime>, List<Genre>>
 
 @{
-	ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
 }
 
 <main>
-	<div class="container home-search">
-		<form asp-action="Index" asp-controller="Home" method="get" class="d-flex search-form" role="search">
-			<input class="form-control mx-5" type="search" placeholder="введіть назву" aria-label="Search" name="searchString">
-			<button class="btn btn-border" type="submit">пошук</button>
-		</form>
-	</div>
+    <div class="container p-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Фільтрувати за жанром:</h4>
+                <form asp-action="Index" asp-controller="Home" method="get">
+                    <div class="form-group">
+                        <label>Оберіть жанр:</label>
+                        <select class="form-control" name="genreIds" multiple>
+                            <option value="">Усі жанри</option>
+                            @foreach (var genre in Model.Item2)
+                            {
+                                <option value="@genre.Id">@genre.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Фільтрувати</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-	<div class="container p-5">
-		<div class="row">
-			@foreach (var item in Model)
-			{
-				<div class="col-lg-3 col-md-6 col-sm-12">
-					<a asp-area="" class="card-a" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id">
-						<div class="card">
-							<img src="@item.Photo" class="card-img-top" alt="...">
-							<div class="card-body">
-								<p class="card-text">@item.Name</p>
-							</div>
-						</div>
-					</a>
-				</div>
-			}
+    <div class="container home-search">
+        <form asp-action="Index" asp-controller="Home" method="get" class="d-flex search-form" role="search">
+            <input class="form-control mx-5" type="search" placeholder="введіть назву" aria-label="Search" name="searchString">
+            <button class="btn btn-border" type="submit">пошук</button>
+        </form>
+    </div>
 
-		</div>
-	</div>
+    <div class="container p-5">
+        <div class="row">
+            @foreach (var item in Model.Item1)
+            {
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <a asp-area="" class="card-a" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id">
+                        <div class="card">
+                            <img src="@item.Photo" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">@item.Name</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+   
+
 </main>
 
 <script>
-	$(document).ready(function () {
-		$('#searchButton').click(function () {
-			var searchString = $('#searchString').val();
-			$.ajax({
-				url: '/Anime/Search',
-				type: 'POST',
-				data: { searchString: searchString },
-				success: function (data) {
-					// Оновити список аніме на сторінці з отриманими даними
-					$('.row').empty().html(data);
-				},
-				error: function () {
-					console.log('Error while searching anime.');
-				}
-			});
-		});
-	});
+    $(document).ready(function () {
+        $('#searchButton').click(function () {
+            var searchString = $('#searchString').val();
+            $.ajax({
+                url: '/Anime/Search',
+                type: 'POST',
+                data: { searchString: searchString },
+                success: function (data) {
+                    // Оновити список аніме на сторінці з отриманими даними
+                    $('.row').empty().html(data);
+                },
+                error: function () {
+                    console.log('Error while searching anime.');
+                }
+            });
+        });
+    });
 </script>

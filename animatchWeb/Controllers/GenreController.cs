@@ -14,10 +14,10 @@ namespace animatchWeb.Controllers
             _context = context;
         }
 
-        public async Task<List<Genre>> GetAllReviews()
+        public async Task<List<Genre>> GetAllGenre()
         {
-            var reviewList = await _context.Genre.ToListAsync();
-            return reviewList;
+            var genreList = await _context.Genre.ToListAsync();
+            return genreList;
         }
 
         public async Task<List<string>> GetGenresForAnime(int id)

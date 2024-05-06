@@ -15,6 +15,10 @@ namespace animatchWeb.Controllers
         private readonly AddedAnimeController _addedAnimeController;
         private readonly ReviewController _reviewController;
         private readonly UserInfoController _userInfoController;
+        private readonly GenreController _genreController;
+        private readonly DislikedController _dislikedAnimeController;
+        private readonly WatchedController _watchedAnimeController;
+
 
         public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
@@ -23,12 +27,18 @@ namespace animatchWeb.Controllers
             _addedAnimeController = new AddedAnimeController(context);
             _reviewController = new ReviewController(context);
             _userInfoController = new UserInfoController(context, userManager, signInManager);
+            _genreController = new GenreController(context);
+            _watchedAnimeController = new WatchedController(context);
+            _dislikedAnimeController = new DislikedController(context);
         }
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, List<int> genreIds)
         {
-            var animeList = await _animeController.GetAllAnime(searchString);
-            return View(animeList);
+            var animeList = await _animeController.GetAllAnime(searchString, genreIds);
+            var genreList = await _genreController.GetAllGenre();
+
+            var model = new Tuple<List<Anime>, List<Genre>>(animeList, genreList);
+            return View(model);
         }
 
         public async Task<IActionResult> Random()
@@ -78,12 +88,34 @@ namespace animatchWeb.Controllers
 
         public async Task<IActionResult> ContentManagement()
         {
-            var animeList = await _animeController.GetAllAnime("");
+            var animeList = await _animeController.GetAllAnime("", new List<int>());
             var reviewList = await _reviewController.GetAllReviews();
             var userList = await _userInfoController.GetAllUsers(); 
 
             var model = new Tuple<List<Anime>, List<ReviewViewModel>, List<UserInfo>>(animeList, reviewList, userList);
             return View(model);
+        }
+
+        public async Task<IActionResult> Recommendation()
+        {
+            var randomAnime = await _animeController.GetRandomAnime();
+            var isLiked = false;
+            var isAdded = false;
+            var isDisliked = false;
+            var isWatched = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.Identity.Name;
+                isLiked = await _likedController.IsLiked(randomAnime.Item1.Id, userId);
+                isAdded = await _addedAnimeController.IsAdded(randomAnime.Item1.Id, userId);
+                isDisliked = await _dislikedAnimeController.IsDisliked(randomAnime.Item1.Id, userId);
+                isWatched = await _watchedAnimeController.IsWatched(randomAnime.Item1.Id, userId);
+            }
+			var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>, Tuple<bool, bool, bool, bool>>(
+	                    randomAnime.Item1, randomAnime.Item2, randomAnime.Item3, randomAnime.Item4,
+	                    Tuple.Create(isLiked, isAdded, isDisliked, isWatched));
+
+			return View(model);
         }
     }
 }

@@ -1,0 +1,206 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<animatchWeb.Areas.Identity.Data.ApplicationUser> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<animatchWeb.Areas.Identity.Data.ApplicationUser> UserManager
+
+@model Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>, Tuple<bool, bool, bool, bool>>
+
+@{
+	ViewData["Title"] = "Recommendation";
+}
+
+<div class="random">
+	<div class="anime-card">
+		<img src="@Model.Item1.Photo" alt="anime photo" />
+		<div class="anime-card-text">
+			<h2>@Model.Item1.Name</h2>
+			<p>@Model.Item1.Year</p>
+			<p>Сподобалось усім користувачам</p>
+			<div class="anime-card-text-description">
+				@if (Model.Item1.Text.Length > 100)
+				{
+					<span class="short-text">@Model.Item1.Text.Substring(0, 100)...</span>
+					<span class="full-text" style="display:none;">@Model.Item1.Text</span>
+					<button class="btn-more">...</button>
+				}
+				else
+				{
+					<span class="short-text">@Model.Item1.Text</span>
+				}
+			</div>
+			<p>IMDB рейтинг: @Model.Item1.Imdbrate/10</p>
+			<div class="anime-card-text-rate">
+				<div class="line-max"></div>
+				<div class="line-rating" style="width: calc((@Model.Item1.Imdbrate / 10) * 100%);"></div>
+			</div>
+			<div class="flex-row gap-1">
+				@foreach (var genre in Model.Item3)
+				{
+					<p class="anime-card-text-genre">@genre.Name</p>
+				}
+			</div>
+			<div class="anime-card-text-status">
+				<form asp-action="Recommendation" asp-controller="Home" method="post">
+					<button type="submit" class="btn btn-border align-self-center">Дальше</button>
+				</form>
+
+			</div>
+
+			<div class="anime-card-text-status">
+				<div id="likeStatus">
+					@if (Model.Item5.Item1)
+					{
+						<form class="anime-card-text-icon" asp-action="UnLike" asp-controller="LikedAnime" method="post">
+							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+							<button type="submit" id="unLikeButton">
+								<i class="fas fa-heart fa-2xl" style="color: #713E79;"></i>
+							</button>
+						</form>
+					}
+					else
+					{
+						<form class="anime-card-text-icon" asp-action="Like" asp-controller="LikedAnime" method="post">
+							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+							<button type="submit" id="likeButton">
+								<i class="far fa-heart fa-2xl" style="color: #713E79;"></i>
+							</button>
+						</form>
+					}
+				</div>
+				
+				<div id="DislikedStatus">
+					@if (Model.Item5.Item3)
+					{
+						<form class="anime-card-text-icon" asp-action="UnDisliked" asp-controller="Disliked" method="post">
+							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+							<button type="submit" id="unSaveButton">
+								<i class="fa-solid fa-thumbs-down" style="color: #713E79;"></i>
+							</button>
+						</form>
+					}
+					else
+					{
+						<form class="anime-card-text-icon" asp-action="Dislike" asp-controller="Disliked" method="post">
+							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+							<button type="submit" id="saveButton">
+								<i class="fa-regular fa-thumbs-down" style="color: #713E79;"></i>
+							</button>
+						</form>
+					}
+				</div>
+				<div id="WatchedStatus">
+					@if (Model.Item5.Item4)
+					{
+						<form class="anime-card-text-icon" asp-action="UnWatched" asp-controller="Watched" method="post">
+							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+							<button type="submit" id="unSaveButton">
+								<i class="fa-solid fa-eye" style="color: #713E79;"></i>
+							</button>
+						</form>
+					}
+					else
+					{
+						<form class="anime-card-text-icon" asp-action="Watched" asp-controller="Watched" method="post">
+							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+							<button type="submit" id="saveButton">
+								<i class="fa-regular fa-eye" style="color: #713E79;"></i>
+							</button>
+						</form>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@foreach (var review in Model.Item2)
+	{
+		var userInfo = Model.Item4.FirstOrDefault(u => u.Id == review.UserId);
+		<div class="review">
+			<div class="flex-column">
+				<a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo.Id">
+					<img src="@userInfo.Photo" alt="User Photo" height="40" width="40" class="review-user-image" />
+				</a>
+			</div>
+			<div class="flex-column w-100 review-user-text">
+				<a asp-area="View" asp-controller="UserInfo" asp-action="Details" asp-route-id="@userInfo.Id">
+					<p class="review-user-name">@userInfo.Name</p>
+				</a>
+				<div class="review-text">@review.Text</div>
+
+			</div>
+			<div class="review-rate">
+				@if (review.Rate == 1)
+				{
+					<i class="far fa-face-smile fa-xl" style="color: #713E79"></i>
+				}
+				else if (review.Rate == 2)
+				{
+					<i class="far fa-face-meh fa-xl" style="color: #713E79"></i>
+				}
+				else if (review.Rate == 3)
+				{
+					<i class="far fa-face-sad-tear fa-xl" style="color: #713E79"></i>
+				}
+			</div>
+		</div>
+	}
+
+</div>
+
+
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const expandBtn = document.querySelector('.btn-more');
+		const shortText = document.querySelector('.short-text');
+		const fullText = document.querySelector('.full-text');
+
+		expandBtn.addEventListener('click', function () {
+			if (shortText.style.display === 'none') {
+				shortText.style.display = 'inline';
+				fullText.style.display = 'none';
+				expandBtn.innerText = 'Показати більше';
+			} else {
+				shortText.style.display = 'none';
+				fullText.style.display = 'inline';
+				expandBtn.innerText = 'Приховати';
+			}
+		});
+	});
+</script>
+
+
+<script>
+	function clearReviewText() {
+		// Отримуємо доступ до елементу textarea за його id
+		var reviewTextArea = document.getElementById('reviewTextArea');
+
+		// Перевіряємо, чи текст у textarea є 'Напишіть відгук', і якщо так, очищуємо його
+		if (reviewTextArea.value === 'Напишіть відгук') {
+			reviewTextArea.value = '';
+		}
+	}
+</script>
+<script>
+	function selectSmiley(rate) {
+		const smileys = document.querySelectorAll('.smiley');
+
+		// Знаходимо обраний смайлик за значенням rate
+		const selectedSmiley = document.querySelector(`.smiley:nth-child(${rate})`);
+
+		// Перевіряємо, чи вибраний смайлик має клас 'selected'
+		if (selectedSmiley.classList.contains('selected')) {
+			// Якщо вже обраний, знімаємо виділення (забираємо вибір)
+			selectedSmiley.classList.remove('selected');
+			// Оновлюємо значення input для відправки форми (встановлюємо 0)
+			document.getElementById('selectedSmiley').value = 0;
+		} else {
+			// Інакше вибираємо новий смайлик
+			smileys.forEach(smiley => {
+				smiley.classList.remove('selected');
+			});
+			selectedSmiley.classList.add('selected');
+			document.getElementById('selectedSmiley').value = rate;
+		}
+	}
+
+</script>

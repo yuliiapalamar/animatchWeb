@@ -18,14 +18,31 @@ namespace animatchWeb.Controllers
         }
 
         // Метод для отримання списку всіх аніме
-        public async Task<List<Anime>> GetAllAnime(string SearchString)
+        public async Task<List<Anime>> GetAllAnime(string searchString, List<int> genreIds)
         {
-            var animeList = await _context.Anime.ToListAsync();
-            if (!string.IsNullOrEmpty(SearchString))
+            var animeQuery = _context.Anime.AsQueryable();
+
+            // Фільтрація за назвою аніме
+            if (!string.IsNullOrEmpty(searchString))
             {
-                animeList = animeList.Where(a => a.Name.ToLower().Contains(SearchString.ToLower())).ToList();
+                animeQuery = animeQuery.Where(a => a.Name.ToLower().Contains(searchString.ToLower()));
             }
-            return animeList;
+
+            // Фільтрація за жанрами
+            if (genreIds != null && genreIds.Any())
+            {
+                animeQuery = animeQuery
+                    .Join(_context.AnimeGenre, a => a.Id, ag => ag.AnimeId, (a, ag) => new { Anime = a, AnimeGenre = ag })
+                    .Where(x => genreIds.Contains(x.AnimeGenre.GenreId))
+                    .Select(x => x.Anime)
+                    .Distinct();
+
+            }
+
+            // Отримати відфільтрований список аніме
+            var filteredAnimeList = await animeQuery.ToListAsync();
+
+            return filteredAnimeList;
         }
 
 
@@ -59,8 +76,6 @@ namespace animatchWeb.Controllers
 
 			return model;
         }
-
-
 
 
         // Метод для отримання випадкового аніме зі списку
@@ -142,6 +157,40 @@ namespace animatchWeb.Controllers
             return _context.Anime.Any(e => e.Id == id);
         }
 
+        public async Task<Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>> getRecommendation(int userId)
+        {
+
+            var animeList = _context.Anime
+                .Where(a => !_context.LikedAnime.Any(l => l.AnimeId == a.Id && l.UserId == userId) &&
+                            !_context.AddedAnime.Any(s => s.AnimeId == a.Id && s.UserId == userId) &&
+                            !_context.DislikedAnime.Any(d => d.AnimeId == a.Id && d.UserId == userId) &&
+                            !_context.WatchedAnime.Any(w => w.AnimeId == a.Id && w.UserId == userId))
+                .ToList();
+
+            var randomAnime = animeList.OrderBy(a => Guid.NewGuid()).FirstOrDefault();
+
+            var reviews = await _context.Review
+                .Where(r => r.AnimeId == randomAnime.Id)
+                .ToListAsync();
+
+            // Отримати інформацію про користувача (UserInfo)
+            var userInfos = new List<UserInfo>();
+            foreach (var review in reviews)
+            {
+                var userInfo = await _context.UserInfo.FirstOrDefaultAsync(u => u.Id == review.UserId);
+                userInfos.Add(userInfo);
+            }
+
+            var genres = await _context.AnimeGenre
+                .Where(ag => ag.AnimeId == randomAnime.Id)
+                .Join(_context.Genre, ag => ag.GenreId, g => g.Id, (ag, g) => g)
+                .ToListAsync();
+
+            var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>>(randomAnime, reviews, genres, userInfos);
+
+
+            return model;
+        }
 
     }
 }
