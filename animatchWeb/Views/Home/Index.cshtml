@@ -9,18 +9,21 @@
         <div class="row">
             <div class="col-md-12">
                 <h4>Фільтрувати за жанром:</h4>
-                <form asp-action="Index" asp-controller="Home" method="get">
+                <button type="button" class="btn btn-secondary" id="showFilters">Вибрати фільтри</button>
+                <form id="filterForm" asp-action="Index" asp-controller="Home" method="get" style="display: none;">
                     <div class="form-group">
-                        <label>Оберіть жанр:</label>
-                        <select class="form-control" name="genreIds" multiple>
-                            <option value="">Усі жанри</option>
+                        <label>Оберіть жанри:</label>
+                        <div class="btn-group-toggle" data-toggle="buttons">
                             @foreach (var genre in Model.Item2)
                             {
-                                <option value="@genre.Id">@genre.Name</option>
+                                <label class="btn btn-secondary genre-btn">
+                                    <input type="checkbox" autocomplete="on" name="genreIds" value="@genre.Id"> @genre.Name
+                                </label>
                             }
-                        </select>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Фільтрувати</button>
+                    <button type="submit" class="btn btn-primary" id="applyFilters">Фільтрувати</button>
+                    <button type="button" class="btn btn-outline-secondary" id="resetFilters">Скинути фільтри</button>
                 </form>
             </div>
         </div>
@@ -29,12 +32,12 @@
     <div class="container home-search">
         <form asp-action="Index" asp-controller="Home" method="get" class="d-flex search-form" role="search">
             <input class="form-control mx-5" type="search" placeholder="введіть назву" aria-label="Search" name="searchString">
-            <button class="btn btn-border" type="submit">пошук</button>
+            <button class="btn btn-border" type="submit" id="searchButton">пошук</button>
         </form>
     </div>
 
     <div class="container p-5">
-        <div class="row">
+        <div class="row" id="animeList">
             @foreach (var item in Model.Item1)
             {
                 <div class="col-lg-3 col-md-6 col-sm-12">
@@ -50,22 +53,61 @@
             }
         </div>
     </div>
-
-   
-
 </main>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#searchButton').click(function () {
-            var searchString = $('#searchString').val();
+        // Показати блок фільтрів
+        $('#showFilters').click(function () {
+            $('#filterForm').toggle();
+        });
+
+        // Обробка натискання кнопки "Фільтрувати"
+        $('#applyFilters').click(function () {
+            saveSelectedGenres(); // Збереження обраних жанрів
+        });
+
+        // Функція для збереження обраних жанрів у localStorage
+        function saveSelectedGenres() {
+            var selectedGenres = [];
+            $('.genre-btn input[type="checkbox"]:checked').each(function () {
+                var genreId = $(this).val();
+                selectedGenres.push(genreId);
+            });
+            localStorage.setItem('selectedGenres', JSON.stringify(selectedGenres));
+        }
+
+        // Відновлення стану фільтрів після завантаження сторінки
+        restoreFilters();
+
+        // Функція для відновлення стану чекбоксів жанрів
+        function restoreFilters() {
+            var selectedGenres = JSON.parse(localStorage.getItem('selectedGenres')) || [];
+            $('.genre-btn input[type="checkbox"]').each(function () {
+                var genreId = $(this).val();
+                $(this).prop('checked', selectedGenres.includes(genreId));
+            });
+        }
+
+        // Скидання обраних фільтрів
+        $('#resetFilters').click(function () {
+            $('.genre-btn input[type="checkbox"]').prop('checked', false);
+            localStorage.removeItem('selectedGenres'); // Видалення збережених обраних жанрів
+        });
+
+        // Обробка події натискання кнопки "пошук"
+        $('#searchButton').click(function (e) {
+            e.preventDefault(); // Зупиняємо дії форми за замовчуванням
+
+            var searchString = $('input[name="searchString"]').val();
             $.ajax({
                 url: '/Anime/Search',
-                type: 'POST',
+                type: 'GET',
                 data: { searchString: searchString },
                 success: function (data) {
-                    // Оновити список аніме на сторінці з отриманими даними
-                    $('.row').empty().html(data);
+                    $('#animeList').empty().html(data); // Оновлюємо список аніме на сторінці з отриманими даними
+                    restoreFilters(); // Відновлюємо стан чекбоксів після оновлення списку аніме
                 },
                 error: function () {
                     console.log('Error while searching anime.');
@@ -74,3 +116,20 @@
         });
     });
 </script>
+
+<style>
+    .btn-group-toggle {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .genre-btn input[type="checkbox"]:checked + label {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .genre-btn {
+        white-space: nowrap; /* Запобігає перенесенню тексту на новий рядок */
+    }
+</style>
