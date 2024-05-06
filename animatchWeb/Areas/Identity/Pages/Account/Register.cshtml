@@ -10,17 +10,17 @@
 		<form class="account register" asp-route-returnUrl="@Model.ReturnUrl" method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 			<div class="form-login">
-				<label class="form-label" asp-for="Input.Email">Email</label>
+				<label class="form-label" asp-for="Input.Email">пошта</label>
 				<input asp-for="Input.Email" class="form-login-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
 				<span asp-validation-for="Input.Email" class="text-danger"></span>
 			</div>
 			<div class="form-login">
-				<label class="form-label" asp-for="Input.Password">Password</label>
+				<label class="form-label" asp-for="Input.Password">пароль</label>
 				<input asp-for="Input.Password" class="form-login-input" autocomplete="new-password" aria-required="true" placeholder="password" />
 				<span asp-validation-for="Input.Password" class="text-danger"></span>
 			</div>
 			<div class="form-login">
-				<label class="form-label" asp-for="Input.ConfirmPassword">Confirm Password</label>
+				<label class="form-label" asp-for="Input.ConfirmPassword">повторіть пароль</label>
 				<input asp-for="Input.ConfirmPassword" class="form-login-input" autocomplete="new-password" aria-required="true" placeholder="password" />
 				<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
 			</div>

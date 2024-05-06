@@ -39,11 +39,11 @@
 				@Model.Item1.Text
 			</p>
 			<p>
-				Watched anime: @Model.Item1.WatchedCount
+				переглянуто аніме: @Model.Item1.WatchedCount
 			</p>
 			@if (SignInManager.IsSignedIn(User) && UserManager.GetUserName(User) == Model.Item1.Email)
 			{
-				<a asp-action="Edit" class="btn btn-border" asp-route-id="@Model.Item1?.Id">Edit</a>
+				<a asp-action="Edit" class="btn btn-border" asp-route-id="@Model.Item1?.Id">редагувати</a>
 			}
 		</div>
 	</div>
@@ -52,7 +52,7 @@
 		<div class="row">
 			@foreach(Anime anime in Model.Item2)
 			{
-				<div class="col-lg-3 col-md-6 col-sm-12">
+				<div class="col-lg-3 col-md-6 saved col-sm-12">
 					<a asp-controller="Home" asp-action="Details" asp-route-id="@anime.Id">
 						<div class="card">
 							<img src="@anime.Photo" class="card-img-top" alt="...">
