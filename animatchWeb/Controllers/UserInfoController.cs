@@ -20,6 +20,12 @@ namespace animatchWeb.Controllers
             _signInManager = signInManager;
         }
 
+        public async Task<int> getId(string email)
+        {
+            int id = await _context.UserInfo.Where(u => u.Email == email).Select(u => u.Id).FirstOrDefaultAsync();
+            return id;
+        }   
+
         public async Task<List<UserInfo>> GetAllUsers()
         {
             var usersList = await _context.UserInfo.ToListAsync();

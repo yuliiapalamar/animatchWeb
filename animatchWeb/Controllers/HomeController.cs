@@ -103,13 +103,18 @@ namespace animatchWeb.Controllers
             var isAdded = false;
             var isDisliked = false;
             var isWatched = false;
+            
             if (User.Identity.IsAuthenticated)
             {
-                var userId = User.Identity.Name;
-                isLiked = await _likedController.IsLiked(randomAnime.Item1.Id, userId);
-                isAdded = await _addedAnimeController.IsAdded(randomAnime.Item1.Id, userId);
-                isDisliked = await _dislikedAnimeController.IsDisliked(randomAnime.Item1.Id, userId);
-                isWatched = await _watchedAnimeController.IsWatched(randomAnime.Item1.Id, userId);
+                var userName = User.Identity.Name;
+                var userId = await _userInfoController.getId(userName);
+                
+                randomAnime= await _animeController.getRecommendation(userId);
+                
+                isLiked = await _likedController.IsLiked(randomAnime.Item1.Id, userName);
+                isAdded = await _addedAnimeController.IsAdded(randomAnime.Item1.Id, userName);
+                isDisliked = await _dislikedAnimeController.IsDisliked(randomAnime.Item1.Id, userName);
+                isWatched = await _watchedAnimeController.IsWatched(randomAnime.Item1.Id, userName);
             }
 			var model = new Tuple<Anime, List<Review>, List<Genre>, List<UserInfo>, Tuple<bool, bool, bool, bool>>(
 	                    randomAnime.Item1, randomAnime.Item2, randomAnime.Item3, randomAnime.Item4,
