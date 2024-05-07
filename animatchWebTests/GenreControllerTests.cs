@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace GenreControllerTests
+namespace animatchWebTests
 {
 	public class GenreControllerTests
 	{
@@ -22,7 +22,7 @@ namespace GenreControllerTests
 
 			// Create a real instance of DbContextOptions<ApplicationDbContext>
 			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseInMemoryDatabase(databaseName: "TestDb")
+				.UseInMemoryDatabase(databaseName: "TestDb1")
 				.Options;
 
 			// Seed the in-memory database with test data
@@ -52,7 +52,7 @@ namespace GenreControllerTests
 		{
 			// Arrange
 			var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-				.UseInMemoryDatabase(databaseName: "TestDb")
+				.UseInMemoryDatabase(databaseName: "TestDb2")
 				.Options;
 
 			var animeId = 1;
