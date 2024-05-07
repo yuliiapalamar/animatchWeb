@@ -17,7 +17,7 @@
 			<div class="anime-card-text-description">
 				@if (Model.Item1.Text.Length > 100)
 				{
-					<span class="short-text">@Model.Item1.Text.Substring(0, 100)...</span>
+					<span class="short-text">@Model.Item1.Text.Substring(0, 100)</span>
 					<span class="full-text" style="display:none;">@Model.Item1.Text</span>
 					<button class="btn-more">...</button>
 				}
@@ -37,76 +37,76 @@
 					<p class="anime-card-text-genre">@genre.Name</p>
 				}
 			</div>
-			<div class="anime-card-text-status">
-				<form asp-action="Recommendation" asp-controller="Home" method="post">
-					<button type="submit" class="btn btn-border align-self-center">Дальше</button>
-				</form>
+				<div class="anime-card-text-status">
+					<div id="likeStatus">
+						@if (Model.Item5.Item1)
+						{
+							<form class="anime-card-text-icon" asp-action="UnLike" asp-controller="LikedAnime" method="post">
+								<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+								<button type="submit" id="unLikeButton">
+									<i class="fas fa-heart fa-2xl" style="color: #713E79;"></i>
+								</button>
+							</form>
+						}
+						else
+						{
+							<form class="anime-card-text-icon" asp-action="Like" asp-controller="LikedAnime" method="post">
+								<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+								<button type="submit" id="likeButton">
+									<i class="far fa-heart fa-2xl" style="color: #713E79;"></i>
+								</button>
+							</form>
+						}
+					</div>
 
-			</div>
-
-			<div class="anime-card-text-status">
-				<div id="likeStatus">
-					@if (Model.Item5.Item1)
-					{
-						<form class="anime-card-text-icon" asp-action="UnLike" asp-controller="LikedAnime" method="post">
-							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
-							<button type="submit" id="unLikeButton">
-								<i class="fas fa-heart fa-2xl" style="color: #713E79;"></i>
-							</button>
-						</form>
-					}
-					else
-					{
-						<form class="anime-card-text-icon" asp-action="Like" asp-controller="LikedAnime" method="post">
-							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
-							<button type="submit" id="likeButton">
-								<i class="far fa-heart fa-2xl" style="color: #713E79;"></i>
-							</button>
-						</form>
-					}
+					<div id="DislikedStatus">
+						@if (Model.Item5.Item3)
+						{
+							<form class="anime-card-text-icon" asp-action="UnDisliked" asp-controller="Disliked" method="post">
+								<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+								<button type="submit" id="unSaveButton">
+									<i class="fa-solid fa-thumbs-down fa-2xl" style="color: #713E79;"></i>
+								</button>
+							</form>
+						}
+						else
+						{
+							<form class="anime-card-text-icon" asp-action="Dislike" asp-controller="Disliked" method="post">
+								<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+								<button type="submit" id="saveButton">
+									<i class="fa-regular fa-thumbs-down fa-2xl" style="color: #713E79;"></i>
+								</button>
+							</form>
+						}
+					</div>
+					<div id="WatchedStatus">
+						@if (Model.Item5.Item4)
+						{
+							<form class="anime-card-text-icon" asp-action="UnWatched" asp-controller="Watched" method="post">
+								<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+								<button type="submit" id="unSaveButton">
+									<i class="fa-solid fa-eye fa-2xl" style="color: #713E79;"></i>
+								</button>
+							</form>
+						}
+						else
+						{
+							<form class="anime-card-text-icon" asp-action="Watched" asp-controller="Watched" method="post">
+								<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+								<button type="submit" id="saveButton">
+									<i class="fa-regular fa-eye fa-2xl" style="color: #713E79;"></i>
+								</button>
+							</form>
+						}
+						
+					</div>
+					<form class="anime-card-text-icon" asp-action="Recommendation" asp-controller="Home" method="post">
+						<input type="hidden" name="animeId" value="@Model.Item1.Id" />
+						<button type="submit" class="align-self-center">
+							<i class="fa-solid fa-angles-right fa-2xl" style="color: #713E79;"></i>
+						</button>
+					</form>
 				</div>
-				
-				<div id="DislikedStatus">
-					@if (Model.Item5.Item3)
-					{
-						<form class="anime-card-text-icon" asp-action="UnDisliked" asp-controller="Disliked" method="post">
-							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
-							<button type="submit" id="unSaveButton">
-								<i class="fa-solid fa-thumbs-down" style="color: #713E79;"></i>
-							</button>
-						</form>
-					}
-					else
-					{
-						<form class="anime-card-text-icon" asp-action="Dislike" asp-controller="Disliked" method="post">
-							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
-							<button type="submit" id="saveButton">
-								<i class="fa-regular fa-thumbs-down" style="color: #713E79;"></i>
-							</button>
-						</form>
-					}
-				</div>
-				<div id="WatchedStatus">
-					@if (Model.Item5.Item4)
-					{
-						<form class="anime-card-text-icon" asp-action="UnWatched" asp-controller="Watched" method="post">
-							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
-							<button type="submit" id="unSaveButton">
-								<i class="fa-solid fa-eye" style="color: #713E79;"></i>
-							</button>
-						</form>
-					}
-					else
-					{
-						<form class="anime-card-text-icon" asp-action="Watched" asp-controller="Watched" method="post">
-							<input type="hidden" name="animeId" value="@Model.Item1.Id" />
-							<button type="submit" id="saveButton">
-								<i class="fa-regular fa-eye" style="color: #713E79;"></i>
-							</button>
-						</form>
-					}
-				</div>
-			</div>
 		</div>
 	</div>
 

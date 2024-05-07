@@ -17,7 +17,7 @@
 			<div class="anime-card-text-description">
 				@if (Model.Item1.Text.Length > 100)
 				{
-					<span class="short-text">@Model.Item1.Text.Substring(0, 100)...</span>
+					<span class="short-text">@Model.Item1.Text.Substring(0, 100)</span>
 					<span class="full-text" style="display:none;">@Model.Item1.Text</span>
 					<button class="btn-more">...</button>
 				}
@@ -39,7 +39,7 @@
 			</div>
 			<div class="anime-card-text-status">
 				<form asp-action="Random" asp-controller="Home" method="post">
-					<button type="submit" class="btn btn-border align-self-center">рандомне аніме</button>
+					<button type="submit" class=" btn-border align-self-center">рандомне аніме</button>
 				</form>
 			</div>
 
