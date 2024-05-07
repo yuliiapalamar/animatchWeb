@@ -133,7 +133,6 @@ namespace animatchWeb.Controllers
             return _context.UserInfo.Any(e => e.Id == id);
         }
 
-
         public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null)
