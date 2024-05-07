@@ -43,7 +43,7 @@
 			</p>
 			@if (SignInManager.IsSignedIn(User) && UserManager.GetUserName(User) == Model.Item1.Email)
 			{
-				<a asp-action="Edit" class="btn btn-border" asp-route-id="@Model.Item1?.Id">редагувати</a>
+				<a asp-action="Edit" class="btn-border" asp-route-id="@Model.Item1?.Id">редагувати</a>
 			}
 		</div>
 	</div>
